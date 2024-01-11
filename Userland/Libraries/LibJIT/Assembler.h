@@ -14,6 +14,12 @@
 namespace JIT {
 using Assembler = X86_64Assembler;
 }
+#elif ARCH(AARCH64)
+#    include <LibJIT/Aarch64/Assembler.h>
+#    define JIT_ARCH_SUPPORTED 1
+namespace JIT {
+using Assembler = Aarch64Assembler;
+}
 #else
 #    undef JIT_ARCH_SUPPORTED
 #endif

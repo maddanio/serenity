@@ -75,16 +75,16 @@ struct OperandInterface {
         return (offset_or_immediate <= NumericLimits<i32>::max()) || (((~offset_or_immediate) & NumericLimits<i32>::min()) == 0);
     }
 };
-template<typename LabelImpl>
+template<typename LabelImpl, typename Assember>
 struct LabelInterface {
-    void link(AssemberImpl& assembler)
+    void link(Assember& assembler)
     {
         link_to(assembler, assembler.m_output.size());
     }
 
-    void link_to(AssemberImpl& assembler, size_t link_offset)
+    void link_to(Assember& assembler, size_t link_offset)
     {
-        impl()->link_to(assemler, link_offset);
+        impl()->link_to(assembler, link_offset);
     }
 private:
     LabelImpl* impl()
@@ -92,14 +92,15 @@ private:
         return static_cast<LabelImpl*>(this);
     }
 };
-template<typename AssemberImpl>
+template<typename AssemberImpl, typename RegT, typename LabelT>
 struct AssemblerInterface
 {
 // label(
 // label.link(
 // label.link_to(
-    using Operand = OperandInterface<typename Impl::Reg>;
-    using Label = typename AssemberImpl::Label;
+    using Reg = RegT;
+    using Label = LabelT;
+    using Operand = OperandInterface<Reg>;
     enum class Condition {
         Overflow = 0x0,
         EqualTo = 0x4,
@@ -144,7 +145,7 @@ struct AssemblerInterface
     void enter() {impl()->enter();}
     void exit() {impl()->exit();}
     void inc32(Operand op, Optional<Label&> overflow_label) {impl()->inc32(op, overflow_label);}
-    Label jump() {return impl()->jump();}
+    [[nodiscard]] Label jump() {return impl()->jump();}
     void jump(Label& label) {impl()->jump(label);}
     void jump(Operand op) {impl()->jump(op);}
     void jump_if(Condition condition, Label& label) {impl()->jump_if(condition, label);}

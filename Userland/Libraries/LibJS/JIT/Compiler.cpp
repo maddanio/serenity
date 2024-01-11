@@ -1261,9 +1261,9 @@ void Compiler::compile_left_shift(Bytecode::Op::LeftShift const& op)
     Assembler::Label end {};
 
     branch_if_both_int32(ARG1, ARG2, [&] {
-        // RCX = ARG2
+        // ARG3 = ARG2
         m_assembler.mov(
-            Assembler::Operand::Register(Assembler::Reg::RCX),
+            Assembler::Operand::Register(ARG3),
             Assembler::Operand::Register(ARG2));
 
         // ARG1 <<= CL (32-bit)
@@ -1299,9 +1299,9 @@ void Compiler::compile_right_shift(Bytecode::Op::RightShift const& op)
     Assembler::Label end {};
 
     branch_if_both_int32(ARG1, ARG2, [&] {
-        // RCX = ARG2
+        // ARG3 = ARG2
         m_assembler.mov(
-            Assembler::Operand::Register(Assembler::Reg::RCX),
+            Assembler::Operand::Register(ARG3),
             Assembler::Operand::Register(ARG2));
 
         // ARG1 >>= CL (32-bit)
@@ -1343,9 +1343,9 @@ void Compiler::compile_unsigned_right_shift(Bytecode::Op::UnsignedRightShift con
             Assembler::Operand::Register(GPR0),
             Assembler::Operand::Register(ARG1));
 
-        // RCX = ARG2
+        // ARG3 = ARG2
         m_assembler.mov(
-            Assembler::Operand::Register(Assembler::Reg::RCX),
+            Assembler::Operand::Register(ARG3),
             Assembler::Operand::Register(ARG2));
 
         // GPR0 >>>= CL (32-bit)
